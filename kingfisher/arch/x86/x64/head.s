@@ -1,9 +1,11 @@
 
 [BITS 32]
 
+[GLOBAL start]
 [GLOBAL multiboot]
 
 ; external references to executable sections
+[EXTERN kingfisher_start32]
 [EXTERN code]
 [EXTERN bss]
 [EXTERN end]
@@ -38,3 +40,10 @@ section .bss
 align 32
     resb STACKSIZE
 
+
+section .init32
+
+start:
+    cld
+    cli
+    jmp kingfisher_start32

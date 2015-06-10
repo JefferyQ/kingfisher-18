@@ -34,8 +34,13 @@ SECTIONS
 
   .init32 : AT( ADDR(.init32) )
   {
-      build/arch/x86/boot.o (.init)
-  } : init
+    init32 = .; _init32 = .; __init32 = .;
+  } : init32
+
+  .init64 : AT( ADDR(.init64) )
+  {
+    init64 = .; _init64 = .; __init64 = .;
+  } : init64
 
   . = KERNEL_VMA_HIGH;
 
