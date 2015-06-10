@@ -4,15 +4,17 @@ ASM_OBJS=$(patsubst %.s, build/%.o, $(ASM_SOURCES))
 C_SOURCES=
 C_OBJS=$(patsubst %.c, build/%.o, $(C_SOURCES))
 
+KERNELIMAGE=kingfisher.elf32
+
 CC=gcc
 CPP=g++
 AS=nasm
 LD=ld
 
-CFLAGS=-nostdlib -fno-builtin -fno-stack-protector -ffreestanding -m64
+CFLAGS=-nostdlib -fno-builtin -fno-stack-protector -m32 -ffreestanding
 CPPFLAGS=
-LDFLAGS=-melf_x86_64 -Tlink64.ld 
-ASFLAGS=-felf64
+LDFLAGS=-melf_i386 -Tlink32.ld
+ASFLAGS=-felf32
 
 QUIET_AS         = @echo '   ' AS '   ' $@;
 QUIET_CC         = @echo '   ' CC '   ' $@;
@@ -20,7 +22,7 @@ QUIET_LINK       = @echo '   ' LINK ' ' $@;
 QUIET_AR         = @echo '   ' AR '   ' $@;
 QUIET_SO         = @echo '   ' SO '   ' $@;
 
-all: prereq $(ASM_OBJS) $(C_OBJS) kingfisher multiboot_check
+all: prereq $(ASM_OBJS) $(C_OBJS) ${KERNELIMAGE} multiboot_check
 
 .phony rebuild: clean all
 
@@ -29,10 +31,10 @@ prereq:
 	mkdir -p ./build/arch/x86
 
 clean:
-	rm -f kingfisher
-	rm -rf build
+	@echo ' rm ${KERNELIMAGE} '; rm -f ${KERNELIMAGE};
+	@echo ' rm build tree '; rm -rf build
 
-kingfisher: $(ASM_OBJS) $(C_OBJS)
+${KERNELIMAGE}: $(ASM_OBJS) $(C_OBJS)
 	$(QUIET_LINK) $(LD) $(LDFLAGS) -o $@ $(ASM_OBJS) $(C_OBJS)
 
 build/%.o: %.s
@@ -44,8 +46,6 @@ build/%.o: %.c
 build/%.o: %.cpp
 	$(QUIET_CPP) $(CPP) $(CPPFLAGS) $< -o $@
 
-multiboot_check: kingfisher
-	./third_party/mbchk/mbchk kingfisher
-
-
+multiboot_check: ${KERNELIMAGE}
+	./third_party/mbchk/mbchk ${KERNELIMAGE}
 

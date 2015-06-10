@@ -2,4 +2,6 @@
 *.o
 .*.swp
 build/*
-kingfisher 
+*.elf32
+*.elf64
+*.efi 
