@@ -29,4 +29,3 @@ cpu_test_vtx:
     mov eax, DWORD 0x20000000
     xor eax, edx
     ret
-    

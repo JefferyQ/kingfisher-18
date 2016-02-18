@@ -4,4 +4,5 @@
 build/*
 *.elf32
 *.elf64
-*.efi 
+*.efi
+third_party/mbchk/mbchk

@@ -1,6 +1,8 @@
 
 [BITS 64]
 
+[SECTION .init64]
+
 [GLOBAL longmode]
 [GLOBAL x64_entry]
 
